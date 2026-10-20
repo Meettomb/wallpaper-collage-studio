@@ -161,7 +161,7 @@
     $('thumbs').innerHTML='';
     photos.forEach((p,i)=>{
       const box=document.createElement('div'); box.className='thumb';
-      const img=document.createElement('img'); img.src=p.url; img.alt=p.file.name;
+      const img=document.createElement('img'); img.src=p.url; img.alt=p.file.name; img.loading='lazy'; img.decoding='async'; img.fetchPriority='low';
       const btn=document.createElement('button'); btn.textContent='×'; btn.title='Remove '+p.file.name; btn.setAttribute('aria-label','Remove '+p.file.name);
       btn.onclick=()=>{URL.revokeObjectURL(p.url);photos.splice(i,1);updateThumbs();render();updateUploadLimits();};
       box.append(img,btn); $('thumbs').append(box);
