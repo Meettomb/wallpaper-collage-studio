@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wallpaper Collage Studio</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="loading-overlay" id="loadingOverlay" hidden aria-live="polite">
+  <div class="loading-card">
+    <h2>Loading your images…</h2>
+    <p id="loadingMessage">Preparing selected images.</p>
+    <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="loading-meta"><span id="progressCount">0 of 0 images</span><strong id="progressPercent">0%</strong></div>
+    <button type="button" id="cancelLoading" class="cancel-loading">Cancel loading</button>
+  </div>
+</div>
+<header>
+  <h1>Wallpaper Collage Studio</h1>
+  <p>Turn your photos into a randomly arranged laptop wallpaper. Everything runs locally in your browser.</p>
+</header>
+<main class="app">
+  <aside class="panel">
+    <h2>Build your wallpaper</h2>
+    <div class="field">
+      <label for="files">Choose multiple images</label>
+      <input id="files" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/tiff,.jpg,.jpeg,.png,.webp,.gif,.bmp,.tif,.tiff,.heic,.heif">
+      <p class="hint">Select image files only. Supported: JPG, PNG, WebP, GIF, BMP, TIFF, HEIC and HEIF. HEIC/HEIF conversion requires an internet connection; your photos stay in your browser.</p>
+      <p class="hint" id="uploadLimits">Upload limits: maximum 50 images, 30 MB per image, 1,500 MB combined.</p>
+    </div>
+    <div class="field">
+      <label for="ratio">Wallpaper / screen ratio</label>
+      <select id="ratio">
+        <option value="16:9" selected>16:9 — most laptops (1920 × 1080)</option>
+        <option value="16:10">16:10 — many modern laptops (1920 × 1200)</option>
+        <option value="3:2">3:2 — some laptops (2160 × 1440)</option>
+        <option value="21:9">21:9 — ultrawide (2560 × 1080)</option>
+        <option value="custom">Custom dimensions</option>
+      </select>
+    </div>
+    <div id="customFields" class="field" hidden>
+      <label>Custom width × height (pixels)</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <input id="customW" type="number" min="320" max="7680" value="1920" aria-label="Custom width">
+        <input id="customH" type="number" min="240" max="4320" value="1080" aria-label="Custom height">
+      </div>
+    </div>
+    <div class="field">
+      <label for="bgMode">Background style</label>
+      <select id="bgMode">
+        <option value="solid" selected>Solid color</option>
+        <option value="gradient">Linear gradient</option>
+      </select>
+      <div id="solidColorField" style="margin-top:8px">
+        <label for="bg">Background color</label>
+        <input id="bg" type="color" value="#171923">
+      </div>
+      <div id="gradientFields" hidden style="margin-top:8px">
+        <label for="gradientColorCount">Number of gradient colors</label>
+        <select id="gradientColorCount">
+          <option value="2">2 colors</option><option value="3" selected>3 colors</option>
+          <option value="4">4 colors</option><option value="5">5 colors</option><option value="6">6 colors</option>
+        </select>
+        <div id="gradientColorInputs" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"></div>
+        <div style="margin-top:8px">
+          <label for="gradientAngle">Gradient angle</label>
+          <input id="gradientAngle" type="range" min="0" max="360" value="135">
+          <div class="range-line"><span>0°</span><span id="gradientAngleValue">135°</span><span>360°</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label for="borderSpacing">Border spacing</label>
+      <input id="borderSpacing" type="range" min="0" max="15" step="1" value="0">
+      <div class="range-line"><span>Edge-to-edge</span><span id="borderSpacingValue">0%</span><span>Wide margin</span></div>
+    </div>
+    <div class="field">
+      <label for="layout">Arrangement style</label>
+      <select id="layout">
+        <option value="random" selected>Random scattered collage</option>
+        <option value="grid">Neat grid</option>
+        <option value="polaroid">Polaroid cards</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="density">Photo size</label>
+      <input id="density" type="range" min="0" max="100" value="55">
+      <div class="range-line"><span>Small</span><span id="densityValue">55%</span><span>Up to screen-filling</span></div>
+    </div>
+    <div class="field">
+      <label for="count">Maximum photos in collage</label>
+      <input id="count" type="number" min="1" max="100" value="30">
+    </div>
+    <div class="btns">
+      <button id="shuffle" class="primary" disabled>Randomize layout</button>
+      <button id="download" class="secondary" disabled>Download wallpaper (PNG)</button>
+      <button id="clear" class="secondary" disabled>Remove all photos</button>
+    </div>
+    <div id="status" class="status" role="status"></div>
+    <p class="hint">Tip: Choose the ratio closest to your display resolution. The downloaded PNG is rendered at full wallpaper dimensions.</p>
+  </aside>
+  <section class="stage">
+    <div class="stage-top">
+      <strong>Wallpaper preview</strong>
+      <span id="dimensions">1920 × 1080 px · 16:9</span>
+    </div>
+    <div class="canvas-wrap" id="canvasWrap">
+      <div class="empty" id="empty">Your collage will appear here.<br>Choose multiple images to get started.</div>
+      <canvas id="canvas" hidden></canvas>
+    </div>
+    <div id="thumbs" class="thumbs"></div>
+  </section>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
